@@ -27,7 +27,7 @@ def category(request, category_id):
     return render(request, 'recipes/pages/category.html', context)
 
 
-def recipes(request, id):
+def recipe(request, id):
     recipe = get_object_or_404(
         Recipe.objects.filter(
             pk=id,

@@ -1,7 +1,4 @@
-  "window.zoomLevel": 3,
-  "editor.fontSize": 24,
-  "window.zoomLevel": 2,
-  "editor.fontSize": 24,
+{  
   "python.languageServer": "Pylance", // ms-python.vscode-pylance
   "python.testing.unittestEnabled": false, // ms-python.python
   "python.testing.pytestEnabled": true,
@@ -21,7 +18,7 @@
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
   },
   "[html]": {
@@ -59,3 +56,4 @@
     "javascript": "javascriptreact",
     "typescript": "typescriptreact"
   }
+}
