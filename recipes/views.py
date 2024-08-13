@@ -5,7 +5,6 @@ from .models import Recipe
 from django.db.models import Q
 # Create your views here.
 
-
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
     context = {
