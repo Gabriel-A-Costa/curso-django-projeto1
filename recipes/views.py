@@ -4,30 +4,16 @@ from .models import Recipe
 # For search type OR
 from django.db.models import Q
 # Create your views here.
-from django.core.paginator import Paginator
-from utils.pagination import make_pagination_range
+from utils.pagination import make_pagination
 
 
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
 
-    try:
-        current_page = int(request.GET.get('page', 1))
-    except ValueError:
-        current_page = 1
-
-    paginator = Paginator(recipes, 2)
-    page_obj = paginator.get_page(current_page)
-
-    pagination_range = make_pagination_range(
-        paginator.page_range,
-        4,
-        current_page
-    )
-
+    page_obj, pagination_range = make_pagination(request, recipes, 3)
     context = {
         'recipes': page_obj,
-        'pagination_range': pagination_range
+        'pagination_range': pagination_range,
     }
     return render(request, 'recipes/pages/home.html', context)
 
@@ -40,8 +26,11 @@ def category(request, category_id):
         ).order_by('-id')
     )
 
+    page_obj, pagination_range = make_pagination(request, recipes, 3)
+
     context = {
-        'recipes': recipes,
+        'recipes': page_obj,
+        'pagination_range': pagination_range,
         'title': f'{recipes[0].category.name} - Category',
     }
     return render(request, 'recipes/pages/category.html', context)
@@ -76,9 +65,13 @@ def search(request):
         ), is_published=True
     ).order_by('-id')
 
+    page_obj, pagination_range = make_pagination(request, recipes, 3)
+
     context = {
         'search_term': search_term,
         'search_title': f'Search for "{search_term}"',
-        'recipes': recipes,
+        'pagination_range': pagination_range,
+        'recipes': page_obj,
+        'additional_url_query': f'&q={search_term}',
     }
     return render(request, 'recipes/pages/search.html', context)
