@@ -4,11 +4,30 @@ from .models import Recipe
 # For search type OR
 from django.db.models import Q
 # Create your views here.
+from django.core.paginator import Paginator
+from utils.pagination import make_pagination_range
+
 
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
+
+    try:
+        current_page = int(request.GET.get('page', 1))
+    except ValueError:
+        current_page = 1
+
+    paginator = Paginator(recipes, 2)
+    page_obj = paginator.get_page(current_page)
+
+    pagination_range = make_pagination_range(
+        paginator.page_range,
+        4,
+        current_page
+    )
+
     context = {
-        'recipes': recipes,
+        'recipes': page_obj,
+        'pagination_range': pagination_range
     }
     return render(request, 'recipes/pages/home.html', context)
 
