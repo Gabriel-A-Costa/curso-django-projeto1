@@ -6,11 +6,16 @@ from django.db.models import Q
 # Create your views here.
 from utils.pagination import make_pagination
 
+import os
+
+
+PER_PAGES = int(os.environ.get('PER_PAGE', 3))
+
 
 def home(request):
     recipes = Recipe.objects.filter(is_published=True).order_by('-id')
 
-    page_obj, pagination_range = make_pagination(request, recipes, 3)
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGES)
     context = {
         'recipes': page_obj,
         'pagination_range': pagination_range,
@@ -26,7 +31,7 @@ def category(request, category_id):
         ).order_by('-id')
     )
 
-    page_obj, pagination_range = make_pagination(request, recipes, 3)
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGES)
 
     context = {
         'recipes': page_obj,
@@ -65,7 +70,7 @@ def search(request):
         ), is_published=True
     ).order_by('-id')
 
-    page_obj, pagination_range = make_pagination(request, recipes, 3)
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGES)
 
     context = {
         'search_term': search_term,
